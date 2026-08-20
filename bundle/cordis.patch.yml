@@ -1,0 +1,13 @@
+# PDSS 治理层 patch：安装 `dsh --profile pdss` 时把治理 preset 挂进 agent-presets 名单。
+#
+# 形态说明：本文件是 bundle 的 patch 层（manifest 声明 `dsh.bundle.patch`）。
+# patch 在此把 pdss preset 目录注册为可被 `agent-preset.list` 选中的系统 preset。
+# 安装方式：`dsh plugin --profile <name> add @pdss/agent-preset-bundle`
+# （部署侧亦可将 `pdss/` 目录整体复制进自己的 agent-presets root。）
+
+- id: pdss-preset-roster
+  name: '@deepseek-ai/dsh-agent-presets'
+  config:
+    roots:
+      # 保留部署自带 root；此 patch 追加 PDSS 治理 preset 目录
+      - { id: pdss, path: ./pdss }
