@@ -1,0 +1,43 @@
+{
+  "name": "pdss-agent-preset-bundle",
+  "version": "0.2.0",
+  "description": "PDSS 治理层 agent preset（DeepSeek Harness）：peer covenant 双向刹车 + 反谄臣 FEE 闸 + G1-G6 扶手红线 + 认知免疫技能包。装进用户预设根 $DSH_HOME/.agent-presets/pdss/ 即用，无需任何 profile patch。",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackyjinggit/pdss-agent-preset-bundle.git"
+  },
+  "homepage": "https://github.com/jackyjinggit/pdss-agent-preset-bundle#readme",
+  "bugs": {
+    "url": "https://github.com/jackyjinggit/pdss-agent-preset-bundle/issues"
+  },
+  "type": "module",
+  "bin": {
+    "pdss-preset-install": "./install.mjs",
+    "pdss-preset-verify": "./verify.mjs"
+  },
+  "files": [
+    "pdss/**",
+    "install.mjs",
+    "verify.mjs",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "THIRD-PARTY-NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "agent-preset",
+    "preset",
+    "governance",
+    "pdss",
+    "covenant",
+    "anti-sycophancy",
+    "agent-skills",
+    "ai-safety"
+  ]
+}

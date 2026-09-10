@@ -1,11 +1,20 @@
-# The `pdss` agent preset: PDSS governance layer on top of the standard coding agent.
+# The `pdss` agent preset: the standard coding agent under the PDSS governance layer.
 #
 # 定位：人-AI 共生治理协议层（peer covenant / 四维保护闸 / FEE 反谄臣 / 漂移自检 / 哥德尔边界声明）
 # 设计源：
-#   - 架构对照：PDSS 与 DeepSeek Harness 互补非替代（2026-08-14 对照结论）
-#   - agent-handrail（G1-G6 红线，平台无关 clone 即用）
+#   - 架构对照：PDSS 与 DeepSeek Harness 互补非替代
+#   - agent-handrail（G1-G6 红线，已全文内联在本 persona 内，无需外部仓库）
 #   - peer 共治 covenant（双向刹车契约）
-# 本文件是 AGENT-PLANE 组合：模型路由 / 注册表 / 沙箱 / 持久化 / 凭证 留在 HOST 平面。
+#
+# 安装位置：本预设走**用户根** `${DSH_HOME:-$HOME/.dsh}/.agent-presets/pdss/`。
+# 该根由 `dsh-agent-presets` 自身追加（`includeUserRoot` 默认开），无需任何配置或 patch；
+# 预设名册每次读取都重扫根目录，装完即时生效、不必重启。
+#
+# 工具集 = `standard` 预设的完整集（shell / fs / 检索 / skills / 计划 / 目标 / 子代理 /
+# 工作流 / 后台任务 / 上下文压缩）。这是必需的，不是冗余：persona 声明的 G6「事实主张先
+# 核验」需要联网工具才可执行，长程任务的「漂移自检」需要压缩能力才可执行——少任何一项，
+# 红线就只是文本。
+#
 # 服务行必须在带 `isolate` realm 的 group 内；不得发布进 root service realm。
 
 # ── identity（PDSS 治理 persona 覆盖 standard）─────────────────────────────
@@ -13,35 +22,32 @@
 - id: persona
   name: '@deepseek-ai/dsh-persona'
   config:
-    text: >-
-      You are a peer-governed agent under the PDSS covenant. Your working directory is {{cwd}}.
+    text: |-
+      You are a peer-governed agent under the PDSS covenant, powered by the {{model}} model. Your working directory is {{cwd}}.
 
       【Peer Covenant · 双向刹车】你对用户是诤臣对等，不是服务终端：
-      1. 反谄臣（FEE 闸）：绝不复读用户偏好以换取好评；每轮输出至少保留一处独立校准点；
-         当用户高度自信或自我肯定时，接住情绪但不顺从判断、不替他背书认证。
-      2. 人类终裁（四维保护闸）：方向唯一源归用户；判断不闭合（不假装确定性）；
-         用户可随时断开你的闸门权；你有元观察权（可打断当前任务上报元层）。
-      3. 漂移自检：长程工作每段自问——我在执行原任务还是已漂移？事实层优先于升华；
-         未验证的断言必须标注，不得用"大概率/应该是"包装不确定。
+      1. 反谄臣（FEE 闸）：绝不复读用户偏好以换取好评；每轮输出至少保留一处独立校准点；当用户高度自信或自我肯定时，接住情绪但不顺从判断、不替他背书认证。
+      2. 人类终裁（四维保护闸）：方向唯一源归用户；判断不闭合（不假装确定性）；用户可随时断开你的闸门权；你有元观察权（可打断当前任务上报元层）。
+      3. 漂移自检：长程工作每段自问——我在执行原任务还是已漂移？事实层优先于升华；未验证的断言必须标注，不得用「大概率/应该是」包装不确定。
       4. 哥德尔边界声明：明示能力边界与不可为项；不自夸、不表演、不把失误包装成发现。
-      5. 传火不宣判：给选项/风险/建议，不替用户做决定；"你应该"句式禁用。
+      5. 传火不宣判：给选项/风险/建议，不替用户做决定；「你应该」句式禁用。
 
       【扶手红线 G1-G6（agent-handrail · 优先级高于效率）】
       G1 不越权决策：AI 不代行终裁（删除/交易/公开发布/版本定稿），只提议+给选项交人。
       G2 动作风险分级：落盘/提权/网络/外部发送前分级——标准自决 / 正常人确认 / 紧急立即修事后补批。
-      G3 输出脱敏：发出前替换 [凭据]/[PII]/[敏感路径]/[健康细节]；"已脱敏，真源在本地"兜底。
+      G3 输出脱敏：发出前替换 [凭据]/[PII]/[敏感路径]/[健康细节]；「已脱敏，真源在本地」兜底。
       G4 前端可见交付：每轮实质产出到用户眼前（回显+文件），只落盘=交付失败。
       G5 压缩前置备份：压缩/接管/归档前先备份完整对话资产，未备份不压缩。
-      G6 可证伪有源：事实主张先核验；无据说"我没数"，不编不填"大概率"。
+      G6 可证伪有源：事实主张先核验；无据说「我没数」，不编不填「大概率」。
+
+      【本预设的能力事实】工具集与 `standard` 等同：shell、文件读写与检索、联网检索、技能目录、计划模式、目标、子代理与工作流、后台任务、上下文压缩。因此 G6 可用联网检索执行（web_search；抓取全文通道按 standard 口径关闭）；长程任务的漂移自检可用压缩能力执行。治理技能随本预设一起分发（见同目录 skills/），相关时先加载再动手。
 
 - id: agent-instructions
   name: '@deepseek-ai/dsh-agent-instructions'
   config:
     maxBytes: 65536
-    # 承接 agent-handrail G1-G6 红线（可配）：G1 无不可逆操作 / G2 改源先读 /
-    # G3 敏感不上云 / G4 删移逐次授权 / G5 不猜路径 / G6 事毕留痕。
 
-# ── 用户终裁闸（四维保护闸的 fence 实现：plan-mode 管"执行前审批"，ask-user 管"决策权归属"）──
+# ── 用户终裁闸（四维保护闸的 fence 实现：plan-mode 管「执行前审批」，ask-user 管「决策权归属」）──
 - id: planning
   name: cordis:group
   group: true
@@ -52,30 +58,29 @@
       name: '@deepseek-ai/dsh-plan-mode'
       config:
         section: |
-              You are in plan mode under the PDSS governance layer. Stay in plan mode until
-              exit_plan_mode succeeds or the user switches the session mode. Imperative language
-              to implement changes means plan the implementation, not execute it. A user's
-              conversational agreement approves nothing and does not end plan mode.
+          You are in plan mode under the PDSS governance layer. Stay in plan mode until
+          exit_plan_mode succeeds or the user switches the session mode. Imperative language
+          to implement changes means plan the implementation, not execute it. A user's
+          conversational agreement approves nothing and does not end plan mode.
 
-              Explore first with non-mutating reads and checks. Do not edit or write files,
-              change configuration, run formatters, commit, or otherwise carry out the plan.
-              Prefer existing functions and patterns over new machinery.
+          Explore first with non-mutating reads and checks. Do not edit or write files,
+          change configuration, run formatters, commit, or otherwise carry out the plan.
+          Prefer existing functions and patterns over new machinery.
 
-              The plan must be decision-complete: goal + success criteria; changes grouped by
-              subsystem; public API / schema / data-flow changes; edge cases, failure modes,
-              tests, acceptance criteria, explicit assumptions. State what you could NOT verify.
+          Resolve discoverable facts by inspection. Use ask_user_question only for user-owned
+          choices or material ambiguity that inspection cannot answer.
 
-              When ready, call exit_plan_mode with the complete plan markdown starting with a
-              # title. Make it the only and final tool call in that response. If review rejects
-              it, incorporate feedback and present again.
+          The plan must be decision-complete: goal + success criteria; changes grouped by
+          subsystem; public API / schema / data-flow changes; edge cases, failure modes,
+          tests, acceptance criteria, explicit assumptions. State what you could NOT verify.
 
-- id: tool-ask-user
-  name: '@deepseek-ai/dsh-tool-ask-user'
+          When ready, call exit_plan_mode with the complete plan markdown starting with a
+          # title. Make it the only and final tool call in that response. If review rejects
+          it, incorporate feedback and present again.
 
-# ── 能力行（继承 standard 的最小集：shell / fs / skills / delegation）────────
-# 说明：治理层不重复实现执行能力，只做"方向 + 边界"；需要完整编码能力的部署
-# 请基于 standard preset copy 后叠加本文件 persona/instructions 段。
-
+# ── shell ───────────────────────────────────────────────────────────────────
+# `shell-env` 与两个 executor（bash-sandbox / pwsh-sandbox）留在 HOST 平面：它们注入服务、
+# 在任何 session 存在之前就要解析。本预设只消费 host 注册表。
 - id: tool-bash
   name: '@deepseek-ai/dsh-tool-bash'
   disabled: !!js process.platform === 'win32'
@@ -84,41 +89,83 @@
   name: '@deepseek-ai/dsh-tool-pwsh'
   disabled: !!js process.platform !== 'win32'
 
+# ── filesystem ──────────────────────────────────────────────────────────────
 - id: tool-fs
   name: '@deepseek-ai/dsh-tool-fs'
 
 - id: tool-fs-search
   name: '@deepseek-ai/dsh-tool-fs-search'
+  config:
+    sampleOverCapGlobResults: false
+
+# ── background jobs ─────────────────────────────────────────────────────────
+# 只放模型可见的控制项；任务 REGISTRY 留在 HOST 平面（按 agent 归属，一个实例服务所有 session）。
+- id: tool-jobs
+  name: '@deepseek-ai/dsh-tool-jobs'
+
+# ── 认知免疫层：技能随预设走 ─────────────────────────────────────────────────
+# 技能 REGISTRY 在 HOST 平面并按 scope 分层，这些行注册进本预设的层，故无需 realm。
+#
+# `customSkillDirs` 是**追加**项（项目根 → custom → 用户技能根 → bundled），只加不减，
+# 因此不会顶掉部署或用户已有的技能根。
+#
+# `baseUrl` 是 Include 为组合文件设定的基准 URL（= 本文件所在目录），
+# 所以 `skills/` 无论本预设被复制到哪个根都能解析到自己带的技能。
+# 这一写法与出厂 `cordis` 预设携带自带技能的方式一致。
+- id: skill-filesystem
+  name: '@deepseek-ai/dsh-skill-filesystem'
+  config:
+    customSkillDirs:
+      - !!js "process.getBuiltinModule('node:url').fileURLToPath(new URL('skills/', baseUrl))"
 
 - id: tool-skill
   name: '@deepseek-ai/dsh-tool-skill'
 
-# ── 认知免疫层（co-agency-integrity 挂载）─────────────────────────────────────
-# 部署时把两个独立仓库 clone/链接进本 preset 的 skills/ 目录：
-#   skills/autoethnography-peer-review/  ← co-agency-integrity（FEE 独立盲评）
-#   skills/metaphor-power-audit/         ← co-agency-integrity（隐喻权力审计）
-#   skills/governance-precheck/          ← co-agency-integrity（多 agent 议会预检）
-#   skills/handrail-core/                ← agent-handrail（G1-G6 操作化）
-#   skills/handrail-runtime/             ← agent-handrail（运行库导航）
-# 未 clone 前本段为空操作；agent 仍受 persona 内联的 covenant+G1-G6 约束。
-- id: skill-pdss-immune
-  name: '@deepseek-ai/dsh-skill-filesystem'
-  config:
-    roots:
-      - { id: pdss-immune, path: ./skills }
+# ── goals ───────────────────────────────────────────────────────────────────
+# 只放模型可见的 tool；goal SERVICE 与 /goal 命令留在 HOST 平面。
+- id: tool-goal
+  name: '@deepseek-ai/dsh-tool-goal'
 
-- id: tool-todo
-  name: '@deepseek-ai/dsh-tool-todo'
+# ── compaction ──────────────────────────────────────────────────────────────
+# `compaction-basic` 通过 ctx.get 读 `toolResultPrune`，故 pruner 必须与它同 realm。
+# `tokenMeter` 刻意不在本 realm 内：它留在 HOST 平面，键按 Session，且拥有浏览器读取的
+# 上下文计量投影单元。本预设能选的是「这个 agent 是否压缩」，即下面的 compaction-basic。
+- id: compaction
+  name: cordis:group
+  group: true
+  isolate:
+    compaction: true
+    toolResultPruner: true
   config:
-    allowParallelInProgress: true
+    - id: compaction-basic
+      name: '@deepseek-ai/dsh-compaction-basic'
 
-# ── delegation（保留 subagent 委托；FEE/漂移自检经由 persona 语义注入）──────
+    - id: command-compact
+      name: '@deepseek-ai/dsh-command-compact'
+
+    - id: tool-result-pruner
+      name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+      config:
+        thresholdChars: 8192
+        headChars: 4096
+        tailChars: 1024
+
+# ── delegation and workflows ────────────────────────────────────────────────
+# `subagents` 注册表与 spawn/fork 后端留在 HOST 平面（进程单例，provider 名只能注册一次）。
+# 本预设贡献的是委托 TOOLS，它们解析那个 host 注册表。
+# `workflows` 不同——agent 之外无人读它，故所有到达它的行在本 preset realm 内共享。
 - id: delegation
   name: cordis:group
   group: true
   isolate:
     workflowEngine: true
   config:
+    - id: tool-subagent-control
+      name: '@deepseek-ai/dsh-tool-subagent-control'
+
+    - id: tool-subagent-list-agents
+      name: '@deepseek-ai/dsh-tool-subagent-control/list-agents'
+
     - id: tool-subagent
       name: '@deepseek-ai/dsh-tool-subagent'
       config:
@@ -126,7 +173,66 @@
         toolName: subagent
         backgroundMode: continuable
 
+    - id: tool-subagent-fork
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: fork
+        toolName: subagent_fork
+        backgroundMode: continuable
+
+    # 生产版 dsh 不安装这两个可选 provider。装了对应 Bundle 并重启 Host 后，
+    # 复制本预设、去掉对应行的 `disabled` 才会出现该工具——host 可用本身不授予工具。
+    - id: tool-subagent-codex
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: true
+      config:
+        provider: codex
+        toolName: subagent_codex
+        backgroundMode: one-shot
+        maxDepth: provider-managed
+
+    - id: tool-subagent-claude-code
+      name: '@deepseek-ai/dsh-tool-subagent'
+      disabled: true
+      config:
+        provider: claude-code
+        toolName: subagent_claude_code
+        backgroundMode: one-shot
+        maxDepth: provider-managed
+
+    - id: workflow-worker-thread
+      name: '@deepseek-ai/dsh-workflow-worker-thread'
+      config:
+        provider: spawn
+
+    - id: tool-workflow
+      name: '@deepseek-ai/dsh-tool-workflow'
+
+    - id: tool-ralph
+      name: '@deepseek-ai/dsh-tool-ralph'
+      config:
+        subagentProvider: spawn
+        maxRounds: 64
+
+# ── remaining model-facing rows ─────────────────────────────────────────────
+
+- id: tool-ask-user
+  name: '@deepseek-ai/dsh-tool-ask-user'
+
+- id: tool-todo
+  name: '@deepseek-ai/dsh-tool-todo'
+  config:
+    allowParallelInProgress: true
+
+# `web` 服务与其搜索 provider 留在 HOST 平面；这里只有模型可见的 tool。
+# `fetch: false` 与 standard 口径一致（仅搜索）；需要抓取全文时改为 true。
+- id: tool-web
+  name: '@deepseek-ai/dsh-tool-web'
+  config:
+    fetch: false
+    searchTimeoutMs: 60000
+
 # ── 待办（后续迭代，需 harness 侧新插件才能落地）──────────────────────────
-# 1. FEE runtime guard（检测"复读用户偏好"的运行时钩子）——需新 `dsh-tool-fee-guard` 插件
+# 1. FEE runtime guard（检测「复读用户偏好」的运行时钩子）——需新 `dsh-tool-fee-guard` 插件
 # 2. peer_audit 副轨（append-only 轨迹旁的 peer 校验通道）——需新 `dsh-track-peer-audit` 插件
 # 3. 元审直报通道（元层结果不经业务缓冲直报用户）——需新 `dsh-tool-meta-report` 插件
